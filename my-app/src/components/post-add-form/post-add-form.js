@@ -7,7 +7,7 @@ const PostAddForm = () => {
         <form className="bottom-panel d-flex">
             <input 
                 type="text"
-                placeholder="J чем вы думаетет сейчас"
+                placeholder="О чем вы думаете сейчас"
                 className="form-control new-post-label"
             />
             <button 
