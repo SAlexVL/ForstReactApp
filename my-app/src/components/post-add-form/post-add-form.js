@@ -1,21 +1,30 @@
 import React from 'react';
+import { Button, InputGroup, InputGroupAddon, Input } from 'reactstrap';
+import styled from 'styled-components';
 
-import './post-add-form.css';
+    const InputThink = styled.div`
+        display: flex;
+        margin-top: 20px;
+        .bottom-panel .new-post-label {
+            width: auto;
+            flex-grow: 1;
+            margin-right: 3px;
+          }
+        `
 
 const PostAddForm = ({onAdd}) => {
     return (
-        <div className="bottom-panel d-flex">
-            <input 
-                type="text"
-                placeholder="О чем вы думаете сейчас"
-                className="form-control new-post-label"
-            />
-            <button 
-            type="submit"
-            className="btn btn-outline-secondary"
-            onClick={() => onAdd('Hello!')}>
-            Добавить</button>
-        </div>
+        <InputThink>
+            <InputGroup>
+                <Input placeholder="О чем вы сейчас думаете?"/>
+                <InputGroupAddon addonType="append">
+                    <Button outline color="secondary" 
+                        type="submit"
+                        onClick={() => onAdd('Hello!')}>
+                        Добавить</Button>
+                </InputGroupAddon>
+            </InputGroup>
+        </InputThink>
     )
 }
 
