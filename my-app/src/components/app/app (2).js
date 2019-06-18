@@ -7,28 +7,20 @@ import PostList from '../post-list';
 import PostAddForm from '../post-add-form';
 
 import './app.css';
-import styled from 'styled-components';
-
-            const AppBlock = styled.div`
-            margin: 0 auto;
-            max-width: 800px;
-            `
 
 export default class App extends Component {
-    constructor(props) {
+
+    constructor (props) {
         super(props);
         this.state = {
             data : [
-                {label: 'Going to learn React', important: true, id: '1'},
-                {label: 'That is so good', important: false, id: '2'},
-                {label: 'I need a break...', important: false, id: '3'}
+                {label: 'Going to learn React', important: true, id: 'qwe'},
+                {label: 'That is so good', important: false, id: 'qwer'},
+                {label: 'I need a break...', important: false, id: 'qwert'}
             ]
-
-        }
+        };
         this.deleteItem = this.deleteItem.bind(this);
         this.addItem = this.addItem.bind(this);
-
-        this.maxId = 4;
     }
 
     deleteItem(id) {
@@ -44,22 +36,12 @@ export default class App extends Component {
     }
 
     addItem(body) {
-        const newItem = {
-            label: body,
-            important: false,
-            id: this.maxId++
-        }
-        this.setState(({data}) => {
-            const newArr = [...data, newItem];
-            return {
-                data: newArr
-            }
-        })
+        console.log(body);
     }
 
     render() {
         return (
-            <AppBlock>
+            <div className="app">
                 <AppHeader/>
                 <div className="search-panel d-flex"> 
                     <SearchPanel/>
@@ -70,7 +52,7 @@ export default class App extends Component {
                     onDelete={this.deleteItem}/>
                 <PostAddForm
                     onAdd={this.addItem}/>
-            </AppBlock>
+            </div>
         )
     }
 }
