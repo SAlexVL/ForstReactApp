@@ -27,13 +27,18 @@ export default class App extends Component {
         this.htmlId = idGenerator;  
         this.state = {
             data : [
-                {label: 'Going to learn React', important: true, id: this.htmlId()},
-                {label: 'That is so good', important: false, id: this.htmlId()},
-                {label: 'I need a break...', important: false, id: this.htmlId()}
-            ]            
+                {label: 'Going to learn React', important: true, like: false, id: this.htmlId()},
+                {label: 'That is so good', important: false, like: false, id: this.htmlId()},
+                {label: 'I need a break...', important: false, like: false, id: this.htmlId()}
+            ],
+            term: '',
+            filter: 'all'            
         }
         this.deleteItem = this.deleteItem.bind(this);
-        this.addItem = this.addItem.bind(this);    
+        this.addItem = this.addItem.bind(this); 
+        this.onToggleFuns = this.onToggleFuns.bind(this);   
+        this.onUpdateSearch = this.onUpdateSearch.bind(this);
+        this.onFilterSelect = this.onFilterSelect.bind(this);
     }
 
     deleteItem(id) {
@@ -55,25 +60,88 @@ export default class App extends Component {
             id: this.htmlId()
         }
         this.setState(({data}) => {
-            const newArr = [...data, newItem];
+            const newArr = [...data, newItem];            
             return {
                 data: newArr
             }
         })
-        console.log(newItem.id);
+    }
+
+    onToggleFuns(id, attr) {
+        this.setState(({data}) => {
+            const index = data.findIndex(elem => elem.id === id);
+
+            const old = data[index];
+            let newItem;
+
+            if (attr === "like") {
+                newItem = {...old, like: !old.like};
+            } 
+            
+            if (attr === "important") {
+                newItem = {...old, important: !old.important};
+            }             
+
+            const newArr = [...data.slice(0, index), newItem, ...data.slice(index + 1)];
+
+            return {
+                data: newArr
+            }
+        })
+    }
+
+    searchPost(items, term) {
+        if (term.length === 0) {
+            return items
+        }
+
+        return items.filter( (item) => {
+            return item.label.indexOf(term) > -1
+        });  
+    }
+
+    filterPost(items, filter) {
+        if (filter === 'like') {
+            return items.filter(item => item.like)
+        } else {
+            return items
+        }
+    }
+
+    onUpdateSearch(term) {
+        this.setState({term})
+    }
+
+    onFilterSelect(filter) {
+        this.setState({filter});
     }
 
     render() {
+        const {data, term, filter} = this.state;
+
+        const liked = data.filter(item => item.like).length;
+        const allPosts = data.length;
+
+        const visiblePosts = this.filterPost(this.searchPost(data, term), filter);
+
         return (
             <AppBlock>
-                <AppHeader/>
+                <AppHeader
+                    liked={liked}
+                    allPosts={allPosts}/>
                 <PanelSearch> 
-                    <SearchPanel/>
-                    <PostStatusFilter/>
+                    <SearchPanel
+                        onUpdateSearch={this.onUpdateSearch}/>
+                    <PostStatusFilter
+                        filter={filter}
+                        onFilterSelect={this.onFilterSelect}
+                    />
                 </PanelSearch>
                 <PostList 
-                    posts={this.state.data} 
-                    onDelete={this.deleteItem}/>
+                    posts={visiblePosts} 
+                    onDelete={this.deleteItem}
+                    onToggleFuns={this.onToggleFuns}
+                    />
                 <PostAddForm
                     onAdd={this.addItem}/>
             </AppBlock>
